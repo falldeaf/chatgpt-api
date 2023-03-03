@@ -54,6 +54,10 @@ app.post('/chat/:session/', async (req, res) => {
 	});
 	const completion_text = completion.data.choices[0].message.content;
 
+	while(encode(sessions[req.params.session].map(obj => obj.content).join(' ')).length > 4000) {
+		sessions[req.params.session].shift();
+	}
+
 	sessions[req.params.session].push({"role": "user", "content": req.body});
 	sessions[req.params.session].push({"role": "assistant", "content": completion_text});
 
